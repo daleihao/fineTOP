@@ -1,0 +1,110 @@
+clc;
+clear all;
+close all;
+
+load("kTOP_factors.mat");
+load("mask_SN.mat");
+load('LCELM_1km.mat');
+load('LAISAI_1km.mat');
+res_v = 0.01;
+res_h = 0.01;
+lon = (-124+res_h/2):res_h: (-117-res_h/2);
+lat = (43-res_v/2):-res_v: (34 + res_v/2);
+
+[lons,lats]=meshgrid(lon,lat);
+
+
+season_i = 5;
+
+%% annual
+
+
+aspect_NS = aspect;
+aspect_NS(:) = 0;
+aspect_NS(aspect>90 & aspect<270) = 1;
+aspect_NS = aspect_NS(:);
+
+
+
+
+condition_names = {'Winter','Spring','Summer','Autumn','Annual'};
+% 
+% figure;
+% hold on
+% line([0 6], [0 0], 'Color', 'k', 'LineWidth', 1, 'LineStyle', '--');
+% 
+% h = daboxplot(FSH_all,'groups',aspect_NS,'outsymbol','kx',...
+%     'xtlabels', condition_names,'fill',1,'mean',1,'outliers',0);
+% 
+% box on
+
+    positions = [
+        0.08, 0.68, 0.4, 0.27;  % Top subplot
+        0.08, 0.38, 0.4, 0.27;  % Middle subplot
+        0.08, 0.08, 0.4, 0.27;  % Bottom subplot
+        0.57, 0.68, 0.4, 0.27;  % Top subplot
+        0.57, 0.38, 0.4, 0.27;  % Middle subplot
+        0.57, 0.08, 0.4, 0.27   % Bottom subplot
+        ];
+
+    labels = {'a','b','c','d','e','f'};
+
+    ylims = [-20, 20; 
+        -6 6; 
+        -1 1;
+        -1.5 1.5; 
+        -0.1 0.1; 
+        -50 50;
+        ];
+
+    violin_colors = [0.6350 0.7608 0.8784; 0.9765 0.7725 0.6941]; % Light blue, light orange, light purple
+    violin_colors = [0.6350 0.7608 0.8784; 0.9765 0.7725 0.6941; 0.8353 0.6471 0.8510]; % Light blue, light orange, light purple
+        condition_names = {'Winter','Spring','Summer','Autumn','Annual'};
+
+
+    figure;
+    set(gcf, 'Position', [100, 100, 900, 800]);
+
+    %variable_names = {"Snow cover fraction",'Daytime surface temperature','Nighttime surface temperature'};
+    variables = {'FSH','EFLX_LH_TOT','TV','t_rad_grc','FSNO','H2OSNO'};
+    variable_names = {'\it{F}_{sen} (W/m^2)','\it{F}_{lat} (W/m^2)','\it{T}_{veg} (K)','\it{T}_{surf} (K)','\it{f}_{sno} (K)',' W/m^2'};
+    for variable_i = 1:6
+        subplot('Position', positions(variable_i,:))
+        hold on
+
+        data = get_variable_all(variables{variable_i});
+
+
+        line([0 6], [0 0], 'Color', 'k', 'LineWidth', 1, 'LineStyle', '--');
+
+        h = daboxplot(data,'groups',aspect_NS, 'outsymbol','kx',...
+            'xtlabels', condition_names,'fill',1,'mean',1,'outliers',0);
+
+        ylabel(variables{variable_i});
+        if variable_i <3 || variable_i == 4 || variable_i == 5
+            set(gca,'XTickLabel',[])
+        end
+        set(gca,'FontSize',10);
+
+
+
+        set(gca, 'FontSize', 20,'linewidth',1)
+        grid off
+        ylim(ylims(variable_i,:))
+
+        xlim([0.5 5.5])
+        box on
+
+%        if variable_i == 1
+%           title({'Difference in correlation with', 'MODIS (\DeltaR)'}, 'FontSize', 20, 'HorizontalAlignment', 'center');
+%        end
+        
+       text(0.6,ylims(variable_i,1)*0.85,['(' labels{variable_i} ')'],'fontsize',20,'FontWeight','bold');
+    end
+
+
+set(gcf, 'Color', 'w');
+export_fig('../figure/Figure_energy_SN.pdf', '-pdf', '-m2', '-painters','-nocrop');
+
+close all
+

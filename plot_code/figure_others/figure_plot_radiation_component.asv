@@ -1,0 +1,114 @@
+clc;
+clear all;
+close all;
+
+
+figure;
+subplot(221)
+plot_polar_plot(5,'FSDS',60,'FSDS (W/m^2)')
+subplot(222)
+plot_polar_plot(5,'FLDS',60,'FLDS (W/m^2)')
+subplot(223)
+plot_polar_plot(5,'FSA',60,'FSDS (W/m^2)')
+subplot(224)
+plot_polar_plot(5,'FIRA',60,'FSDS (W/m^2)')
+
+
+%% figure;
+
+
+%% variable variable_names = {'F_LONG_DIF','F_LONG_REFL','F_SHORT_DIR','F_SHORT_DIF','F_SHORT_REFL','forc_solad_grc_pp','forc_solai_grc_pp',...
+%%   'FSDSND','FSDSNI','FSDSVD','FSDSVI','FSDS','LWdown','LWdown_PP','SWdown','SWdown_PP'};
+season_i = 5;
+
+variable_name = 'FSDS'; 
+load(['data/' variable_name '_seasonal_ELM_only_' num2str(season_i) '.mat']);
+FSDS_PPs = default_seasons;
+
+variable_name = 'FSDSND'; 
+load(['data/' variable_name '_seasonal_ELM_only_' num2str(season_i) '.mat']);
+FSDSND_PPs = default_seasons;
+
+variable_name = 'FSDSVD'; 
+load(['data/' variable_name '_seasonal_ELM_only_' num2str(season_i) '.mat']);
+FSDSVD_PPs = default_seasons;
+
+FSDS_DIR_PPs = FSDSVD_PPs + FSDSND_PPs;
+
+variable_name = 'FSDSNI'; 
+load(['data/' variable_name '_seasonal_ELM_only_' num2str(season_i) '.mat']);
+FSDSNI_PPs = default_seasons;
+
+variable_name = 'FSDSVI'; 
+load(['data/' variable_name '_seasonal_ELM_only_' num2str(season_i) '.mat']);
+FSDSVI_PPs = default_seasons;
+
+FSDS_DIF_PPs = FSDSVI_PPs + FSDSNI_PPs;
+
+variable_name = 'FLDS'; 
+load(['data/' variable_name '_seasonal_ELM_only_' num2str(season_i) '.mat']);
+FLDS_PPs = default_seasons;
+
+%% TOP
+
+variable_name = 'FSDS'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FSDS_kTOPs = kTOP_surf_seasons;
+
+variable_name = 'FSDSND'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FSDSND_kTOPs = kTOP_surf_seasons;
+
+variable_name = 'FSDSVD'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FSDSVD_kTOPs = kTOP_surf_seasons;
+
+FSDS_DIR_kTOPs = FSDSVD_kTOPs + FSDSND_kTOPs;
+
+variable_name = 'FSDSNI'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FSDSNI_kTOPs = kTOP_surf_seasons;
+
+variable_name = 'FSDSVI'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FSDSVI_kTOPs = kTOP_surf_seasons;
+
+FSDS_DIF_kTOPs = FSDSVI_kTOPs + FSDSNI_kTOPs;
+
+variable_name = 'F_SHORT_REFL'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FSDS_ADJ_kTOPs = kTOP_surf_seasons;
+
+FSDS_DIF_kTOPs = FSDS_DIF_kTOPs - FSDS_ADJ_kTOPs;
+
+variable_name = 'FLDS'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FLDS_kTOPs = kTOP_surf_seasons;
+
+
+variable_name = 'F_LONG_REFL'; 
+load(['data/' variable_name '_seasonal_ELM_kTOP_only_' num2str(season_i) '.mat']);
+FLDS_ADJ_kTOPs = kTOP_surf_seasons;
+
+
+
+
+figure;
+subplot(231)
+imagesc(FSDS_DIR_kTOPs - FSDS_DIR_PPs)
+colorbar
+subplot(232)
+imagesc(FSDS_DIF_kTOPs  - FSDS_DIF_PPs)
+colorbar
+subplot(233)
+imagesc(FSDS_ADJ_kTOPs)
+colorbar
+subplot(234)
+imagesc(FLDS_kTOPs - FLDS_kTOPs)
+colorbar
+subplot(235)
+imagesc(FSDS_DIR_kTOPs - FSDS_DIR_PPs)
+colorbar
+subplot(236)
+imagesc(FSDS_DIF_kTOPs  - FSDS_DIF_PPs)
+colorbar

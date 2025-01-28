@@ -1,0 +1,45 @@
+clc;
+clear all;
+close all;
+
+
+figure;
+set(gcf,'unit','normalized','position',[0.1,0.05,0.6,0.6]);
+set(gca, 'Position', [0 0 1 1]);
+
+s=subplot('position', [0.05 + (1-1)*0.31 0.52 0.28 0.4]);
+plot_polar_plot_all(5,'FSH',30,'(a) \it{F}_{sen} (W/m^2)')
+
+s=subplot('position', [0.05 + (2-1)*0.31 0.52 0.28 0.4]);
+plot_polar_plot_all(5,'EFLX_LH_TOT',30,'(b) \it{F}_{lat} (W/m^2)')
+
+s=subplot('position', [0.05 + (3-1)*0.31 0.52 0.28 0.4]);
+plot_polar_plot_all(5,'QRUNOFF',1,'(c) Runoff (mm/day)')
+
+
+s=subplot('position', [0.05 + (1-1)*0.31 0.05 0.28 0.4]);
+plot_polar_plot_all(5,'t_rad_grc',3,'(d) \it{T}_{sur}')
+clr = colorbar;
+clr.Title.String = "K";
+
+s=subplot('position', [0.05 + (2-1)*0.31 0.05 0.28 0.4]);
+plot_polar_plot_all(5,'FSNO',0.1,'(e) \it{f}_{sno} ')
+
+clr = colorbar;
+clr.Title.String = "Unitless";
+
+
+s=subplot('position', [0.05 + (3-1)*0.31 0.05 0.28 0.4]);
+plot_polar_plot_all(5,'H2OSNO',60,'(f) SWE')
+
+clr = colorbar;
+%clr.Position = [0.07 + (3-1)*0.31 0.05 0.02 0.4];
+%clr.AxisLocation = "in";
+clr.Title.String = "W/m^2";
+
+
+set(gcf, 'Color', 'w');
+export_fig('../figure/Figure_energy_water_aspect.pdf', '-pdf', '-m2', '-painters','-nocrop');
+
+close all
+
